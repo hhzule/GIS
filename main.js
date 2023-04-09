@@ -1,11 +1,9 @@
 var osmMap = L.tileLayer.provider('OpenStreetMap.Mapnik')
 var imageryMap = L.tileLayer.provider('Esri.WorldImagery')
-
 var baseMap = {
   OSM: osmMap,
   "World Imagery": imageryMap
 }
-
 var map = L.map('map',{
 center: [35.966436, -84.17407],
 zoom: 13,
@@ -26,9 +24,10 @@ var lyrBuffer = L.geoJson.ajax('resources/Layers/Buffer_3000Ft.geojson',
 var lyrBuildings = L.geoJson.ajax('resources/Layers/Buildings.geojson',
 {
   pointToLayer: function (geoJsonPoint, latlng) {
+      var properties = geoJsonPoint.properties;
     return L.circleMarker(latlng,{
       color:"purple"
-    });
+    }).bindTooltip(`<h4>Type: ${properties["Building Name"]}</h4>`);
     }
 }).addTo(map)
 var lyrFiberRoutes = L.geoJson.ajax('resources/Layers/FiberRoutes.geojson',
@@ -42,10 +41,11 @@ var lyrNonIntersecting = L.geoJson.ajax('resources/Layers/ROW_Paths_Not_Intersec
 var lyrSplice = L.geoJson.ajax('resources/Layers/Splice_Points.geojson',
 {
   pointToLayer: function (geoJsonPoint, latlng) {
+    var properties = geoJsonPoint.properties;
     return L.circleMarker(latlng,{
       radius: 7,
       color:"brown"
-    });
+    }).bindTooltip(`<h4>Type: ${properties.ID}</h4>`);;
     }
 }).addTo(map)
 
